@@ -2324,6 +2324,7 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
   );
   const {
     trigger: composerTrigger,
+    detectTrigger: detectActiveComposerTrigger,
     setTrigger: setComposerTrigger,
     resolveTrigger: resolveComposerTrigger,
     dismissTrigger: dismissComposerTrigger,
@@ -3608,7 +3609,7 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
         if (activePendingProgress.activeQuestion.allowCustomAnswer === false) return;
         setComposerCursor(nextCursor);
         setComposerTrigger(
-          cursorAdjacentToMention ? null : detectComposerTrigger(nextPrompt, expandedCursor),
+          cursorAdjacentToMention ? null : detectActiveComposerTrigger(nextPrompt, expandedCursor),
         );
         onChangeActivePendingUserInputCustomAnswer(
           activePendingProgress.activeQuestion.id,
@@ -3719,7 +3720,7 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
       }
       setComposerCursor(nextCursor);
       setComposerTrigger(
-        cursorAdjacentToMention ? null : detectComposerTrigger(nextPrompt, expandedCursor),
+        cursorAdjacentToMention ? null : detectActiveComposerTrigger(nextPrompt, expandedCursor),
       );
     },
     [
@@ -3730,6 +3731,7 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
       promptRef,
       setPrompt,
       setComposerTrigger,
+      detectActiveComposerTrigger,
       composerDraftTarget,
       composerTerminalContexts,
       setComposerDraftTerminalContexts,
@@ -3857,10 +3859,10 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
     return {
       snapshot,
       trigger: resolveComposerTrigger(
-        detectComposerTrigger(snapshot.value, snapshot.expandedCursor),
+        detectActiveComposerTrigger(snapshot.value, snapshot.expandedCursor),
       ),
     };
-  }, [readComposerSnapshot, resolveComposerTrigger]);
+  }, [readComposerSnapshot, resolveComposerTrigger, detectActiveComposerTrigger]);
 
   const { onUsageLimitsCommand } = props;
   const onSelectComposerItem = useCallback(
